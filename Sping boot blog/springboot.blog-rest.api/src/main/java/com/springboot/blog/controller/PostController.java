@@ -2,6 +2,7 @@ package com.springboot.blog.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class PostController {
 		super();
 		this.postService = postService;
 	}
-
+    @PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
 		return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
@@ -45,12 +46,14 @@ public class PostController {
 	public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
 		return new ResponseEntity<>(postService.getPostById(id), HttpStatus.OK);
 	}
-
+	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<PostDto> updateById(@Valid @RequestBody PostDto dto, @PathVariable(name = "id") long id) {
 		return new ResponseEntity<>(postService.updateById(dto, id), HttpStatus.OK);
 	}
-
+	
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteById(@PathVariable(name = "id") long id) {
 		postService.deleteById(id);
